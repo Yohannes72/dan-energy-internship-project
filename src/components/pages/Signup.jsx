@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import {
   MDBBtn,
@@ -17,6 +19,10 @@ import {
 from 'mdb-react-ui-kit';
 
 function App() {
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
+
+
   const [name,setName]= useState('')
 	const [email,setEmail]= useState('')
 	const[password,setPassword]= useState('')
@@ -38,21 +44,24 @@ function App() {
 
       };
       try {
-
+        setLoading(true);
         const result = await axios.post('http://localhost:5000/api/users/register', user);
 
-        setName('')
-        setEmail('')
-        setPassword('')
-        setRepp('')
+        // If the axios request is successful
+        setLoading(false);
+        toast.success("You are successfully registered  for the event");
+        history.push('/');
+
         console.log(result.data);
       } catch (error) {
-        console.log(error);
-
+        setLoading(false);
+        // alert('An error happened. Please Check console');
+        toast.error("An error occurred. ");
       }
+
     }
   return (
-    <MDBContainer fluid>
+    <MDBContainer fluid className='pt-5'>
 
       <MDBCard className='text-black m-5' style={{borderRadius: '25px'}}>
         <MDBCardBody>
